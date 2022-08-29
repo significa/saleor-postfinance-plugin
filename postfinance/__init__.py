@@ -1,26 +1,14 @@
-import uuid
 from urllib.parse import urlencode, urlparse
 
-from postfinancecheckout import (
-    Configuration,
-    LineItem,
-    LineItemType,
-    Transaction,
-    TransactionPaymentPageServiceApi,
-    TransactionServiceApi,
-    TransactionState,
-)
+from postfinancecheckout import (Configuration, LineItem, LineItemType,
+                                 Transaction, TransactionPaymentPageServiceApi,
+                                 TransactionServiceApi, TransactionState)
 
 from ... import TransactionKind
 from ...interface import GatewayConfig, GatewayResponse, PaymentData
 
 POSTFINANCE_E_FINANCE_ID=1461146715166
 POSTFINANCE_CARD_ID=1461144402291
-
-
-def get_client_token(**_):
-    return str(uuid.uuid4())
-
 
 def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayResponse:
     """Generate payment transaction url."""
@@ -38,9 +26,9 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
     line_item = LineItem(
         name="Order",
         quantity=1,
-        amount_including_tax=float(payment_information.amount), #FIXME: questionable
+        amount_including_tax=float(payment_information.amount),
         type=LineItemType.PRODUCT,
-        unique_id=str(uuid.uuid4()),
+        unique_id=payment_information.order_id or str(payment_information.payment_id),
     )
 
     transaction = Transaction(
@@ -61,7 +49,6 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
     postfinance_transaction = transaction_service.create(
         space_id=space_id,
         transaction=transaction,
-    
     )
 
     payment_page_url = transaction_payment_page_service.payment_page_url(
@@ -97,7 +84,7 @@ def confirm(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
         id=transaction_id
     )
 
-    if postfinance_transaction.state == TransactionState.FULFILL:
+    if postfinance_transaction.state in (TransactionState.FULFILL, TransactionState.AUTHORIZED):
         success = True
         error = None
 

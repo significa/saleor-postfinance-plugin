@@ -19,7 +19,6 @@ class PostFinanceGatewayPlugin(BasePlugin):
         {"name": "User ID", "value": None},
         {"name": "User Secret Key", "value": None},
     ]
-    # Some examples
     CONFIG_STRUCTURE = {
         "Space ID": {
             "type": ConfigurationTypeField.STRING,
@@ -65,68 +64,20 @@ class PostFinanceGatewayPlugin(BasePlugin):
     def _get_gateway_config(self):
         return self.config
 
-    # @require_active_plugin
-    # def authorize_payment(
-    #     self, payment_information: "PaymentData", previous_value
-    # ) -> "GatewayResponse":
-    #     print("AUTHORIZE")
-    #     return authorize(payment_information, self._get_gateway_config())
-
-    # @require_active_plugin
-    # def capture_payment(
-    #     self, payment_information: "PaymentData", previous_value
-    # ) -> "GatewayResponse":
-    #     return capture(payment_information, self._get_gateway_config())
-
     @require_active_plugin
     def confirm_payment(
         self, payment_information: "PaymentData", previous_value
     ) -> "GatewayResponse":
-        print("AUTHORIZE2")
-        # After setting TransactionKind.ACTION_TO_CONFIRM 
         return confirm(payment_information, self._get_gateway_config())
 
-    # @require_active_plugin
-    # def refund_payment(
-    #     self, payment_information: "PaymentData", previous_value
-    # ) -> "GatewayResponse":
-    #     print("AUTHORIZE3")
-
-    #     return refund(payment_information, self._get_gateway_config())
-
-    # @require_active_plugin
-    # def void_payment(
-    #     self, payment_information: "PaymentData", previous_value
-    # ) -> "GatewayResponse":
-    #     print("AUTHORIZE4")
-
-    #     return void(payment_information, self._get_gateway_config())
 
     @require_active_plugin
     def process_payment(
         self, payment_information: "PaymentData", previous_value
     ) -> "GatewayResponse":
-        print("AUTHORIZE5")
-        print(payment_information)
         return process_payment(payment_information, self._get_gateway_config())
-
-    # @require_active_plugin
-    # def get_client_token(self, token_config: "TokenConfig", previous_value):
-    #     print("AUTHORIZE6")
-
-    #     return get_client_token()
 
     @require_active_plugin
     def get_supported_currencies(self, previous_value):
-        print("AUTHORIZE7")
-
         config = self._get_gateway_config()
         return get_supported_currencies(config, GATEWAY_NAME)
-
-    # talvez remover
-    @require_active_plugin
-    def get_payment_config(self, previous_value):
-        print("AUTHORIZE8")
-
-        config = self._get_gateway_config()
-        return [{"field": "store_customer_card", "value": config.store_customer}]
