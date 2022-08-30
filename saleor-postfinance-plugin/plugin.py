@@ -1,14 +1,16 @@
 from typing import TYPE_CHECKING
 
+from saleor.payment.gateways.utils import (get_supported_currencies,
+                                           require_active_plugin)
 from saleor.plugins.base_plugin import BasePlugin, ConfigurationTypeField
 
-from ..utils import get_supported_currencies, require_active_plugin
 from . import GatewayConfig, confirm, process_payment
 
 GATEWAY_NAME = "PostFinance"
 
 if TYPE_CHECKING:
     from . import GatewayResponse, PaymentData
+
 
 class PostFinanceGatewayPlugin(BasePlugin):
     PLUGIN_NAME = GATEWAY_NAME
@@ -37,29 +39,31 @@ class PostFinanceGatewayPlugin(BasePlugin):
         },
         "Supported currencies": {
             "type": ConfigurationTypeField.STRING,
-            "help_text": "Determines currencies supported by gateway."
-            " Please enter currency codes separated by a comma.",
+            "help_text": (
+                "Determines currencies supported by gateway."
+                " Please enter currency codes separated by a comma."
+            ),
             "label": "Supported currencies",
         },
     }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        configuration = {item["name"]: item["value"] for item in self.configuration}
+        configuration = {
+            item["name"]: item["value"]
+            for item in self.configuration
+        }
 
         self.config = GatewayConfig(
             gateway_name=GATEWAY_NAME,
             auto_capture=None,
             supported_currencies=configuration["Supported currencies"],
             connection_params={
-                "space_id":  int(configuration["Space ID"]) if configuration["Space ID"] else None,
+                "space_id": int(configuration["Space ID"]) if configuration["Space ID"] else None,
                 "user_id": int(configuration["User ID"]) if configuration["User ID"] else None,
-                "user_secret":  configuration["User Secret Key"],
+                "user_secret": configuration["User Secret Key"],
             }
         )
-
-        print(self.config)
-
 
     def _get_gateway_config(self):
         return self.config
@@ -69,7 +73,6 @@ class PostFinanceGatewayPlugin(BasePlugin):
         self, payment_information: "PaymentData", previous_value
     ) -> "GatewayResponse":
         return confirm(payment_information, self._get_gateway_config())
-
 
     @require_active_plugin
     def process_payment(

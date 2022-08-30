@@ -3,12 +3,13 @@ from urllib.parse import urlencode, urlparse
 from postfinancecheckout import (Configuration, LineItem, LineItemType,
                                  Transaction, TransactionPaymentPageServiceApi,
                                  TransactionServiceApi, TransactionState)
+from saleor.payment import TransactionKind
+from saleor.payment.interface import (GatewayConfig, GatewayResponse,
+                                      PaymentData)
 
-from ... import TransactionKind
-from ...interface import GatewayConfig, GatewayResponse, PaymentData
+POSTFINANCE_E_FINANCE_ID = 1461146715166
+POSTFINANCE_CARD_ID = 1461144402291
 
-POSTFINANCE_E_FINANCE_ID=1461146715166
-POSTFINANCE_CARD_ID=1461144402291
 
 def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayResponse:
     """Generate payment transaction url."""
@@ -28,7 +29,7 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
         quantity=1,
         amount_including_tax=float(payment_information.amount),
         type=LineItemType.PRODUCT,
-        unique_id=payment_information.order_id or str(payment_information.payment_id),
+        unique_id=str(payment_information.payment_id),
     )
 
     transaction = Transaction(
@@ -43,20 +44,22 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
     )
 
     space_id = _get_space_id(config=config)
-    transaction_service = _get_transaction_service(config=config)
-    transaction_payment_page_service = _get_transaction_payment_page_service(config=config)
-    
-    postfinance_transaction = transaction_service.create(
+    postfinance_transaction_service = _get_transaction_service(config=config)
+    postfinance_transaction_payment_page_service = _get_transaction_payment_page_service(
+        config=config
+    )
+
+    postfinance_transaction = postfinance_transaction_service.create(
         space_id=space_id,
         transaction=transaction,
     )
 
-    payment_page_url = transaction_payment_page_service.payment_page_url(
+    payment_page_url = postfinance_transaction_payment_page_service.payment_page_url(
         space_id=space_id,
         id=postfinance_transaction.id,
     )
-    
-    return  GatewayResponse(
+
+    return GatewayResponse(
         transaction_id=postfinance_transaction.id,
         is_success=True,
         action_required=True,
@@ -71,17 +74,16 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
 
 
 def confirm(payment_information: PaymentData, config: GatewayConfig) -> GatewayResponse:
-    """Perform confirm transaction."""
     error = "Unable to process capture"
     success = False
-    
-    transaction_id = int(payment_information.token)
+
+    postfinance_transaction_id = int(payment_information.token)
     space_id = _get_space_id(config=config)
 
-    transaction_service = _get_transaction_service(config=config)
-    postfinance_transaction = transaction_service.read(
+    postfinance_transaction_service = _get_transaction_service(config=config)
+    postfinance_transaction = postfinance_transaction_service.read(
         space_id=space_id,
-        id=transaction_id
+        id=postfinance_transaction_id
     )
 
     if postfinance_transaction.state in (TransactionState.FULFILL, TransactionState.AUTHORIZED):
@@ -89,7 +91,7 @@ def confirm(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
         error = None
 
     return GatewayResponse(
-        transaction_id=transaction_id,
+        transaction_id=postfinance_transaction_id,
         is_success=success,
         action_required=False,
         kind=TransactionKind.CAPTURE,
@@ -102,7 +104,6 @@ def confirm(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
 def process_payment(
     payment_information: PaymentData, config: GatewayConfig
 ) -> GatewayResponse:
-    """Process the payment."""
     return capture(payment_information, config)
 
 
@@ -123,5 +124,3 @@ def _get_configuration(user_id: str, user_secret: str, **_):
         user_id=user_id,
         api_secret=user_secret
     )
-
- 
