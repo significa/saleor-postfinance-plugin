@@ -1,5 +1,3 @@
-from urllib.parse import urlencode, urlparse
-
 from postfinancecheckout import (Configuration, LineItem, LineItemType,
                                  Transaction, TransactionPaymentPageServiceApi,
                                  TransactionServiceApi, TransactionState)
@@ -12,17 +10,8 @@ POSTFINANCE_CARD_ID = 1461144402291
 
 
 def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayResponse:
-    """Generate payment transaction url."""
-
     success_url = payment_information.data["successUrl"]
-    failed_url = payment_information.data["failUrl"]
-
-    encoded_query_params = urlencode({
-        "checkout_id": payment_information.data["checkoutId"],
-    })
-
-    success_url = urlparse(success_url)._replace(query=encoded_query_params).geturl()
-    failed_url = urlparse(failed_url)._replace(query=encoded_query_params).geturl()
+    fail_url = payment_information.data["failUrl"]
 
     line_item = LineItem(
         name="Order",
@@ -39,15 +28,14 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
         ],
         currency=payment_information.currency,
         success_url=success_url,
-        failed_url=failed_url,
+        failed_url=fail_url,
         line_items=[line_item],
     )
 
     space_id = _get_space_id(config=config)
     postfinance_transaction_service = _get_transaction_service(config=config)
     postfinance_transaction_payment_page_service = _get_transaction_payment_page_service(
-        config=config
-    )
+        config=config)
 
     postfinance_transaction = postfinance_transaction_service.create(
         space_id=space_id,
