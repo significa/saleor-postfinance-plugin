@@ -1,4 +1,6 @@
-FROM ghcr.io/saleor/saleor:3.6.7
+ARG SALEOR_VERSION=latest
+
+FROM ghcr.io/saleor/saleor:${SALEOR_VERSION}
 
 COPY ./saleor-postfinance-plugin /app/saleor-postfinance-plugin
 
