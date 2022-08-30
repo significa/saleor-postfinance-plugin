@@ -1,7 +1,7 @@
 FROM ghcr.io/saleor/saleor:3.6.7
 
-RUN pip install -r requirements.txt
+COPY ./saleor-postfinance-plugin /app/saleor-postfinance-plugin
 
-RUN  sed -i 's/EXTERNAL_PLUGINS = \[\]/EXTERNAL_PLUGINS = \[\"saleor.payment.gateways.postfinance.plugin.PostFinanceGatewayPlugin\"\]/g' /app/saleor/settings.py
+RUN cd /app/saleor && pip install -e /app/saleor-postfinance-plugin
 
-COPY ./postfinance /app/saleor/payment/gateways/postfinance
+RUN  sed -i 's/^EXTERNAL_PLUGINS = \[\]/EXTERNAL_PLUGINS = \[\"saleor-postfinance-plugin.plugin.PostFinanceGatewayPlugin\"\]/g' /app/saleor/settings.py
