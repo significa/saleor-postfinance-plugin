@@ -1,6 +1,6 @@
 # Saleor PostFinance plugin
 
-PostFinance gateway plugin for Saleor.
+PostFinance gateway plugin for Saleor. It only supports the PostFinance [payment page integration]('https://checkout.postfinance.ch/doc/payment/payment-page').
 
 ### Setup PostFinance Plugin
 
