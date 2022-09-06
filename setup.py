@@ -6,4 +6,10 @@ setup(
     description="Saleor PostFinance gateway plugin.",
     packages=['saleor-postfinance-plugin'],
     install_requires=["postfinancecheckout==3.1.1"],
+    entry_points={
+        'saleor.plugins': [
+            'saleor-postfinance-plugin = saleor-postfinance-plugin.plugin:PostFinanceGatewayPlugin',
+        ]
+    }
+
 )
