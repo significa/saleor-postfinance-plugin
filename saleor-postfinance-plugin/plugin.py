@@ -69,6 +69,10 @@ class PostFinanceGatewayPlugin(BasePlugin):
         return self.config
 
     @require_active_plugin
+    def token_is_required_as_payment_input(self, previous_value):
+        return False
+
+    @require_active_plugin
     def confirm_payment(
         self, payment_information: "PaymentData", previous_value
     ) -> "GatewayResponse":
