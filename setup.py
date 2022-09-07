@@ -9,6 +9,7 @@ setup(
     version="0.0.1",
     description="Saleor PostFinance gateway plugin.",
     long_description=long_description,
+    long_description_content_type='text/markdown',
     packages=['saleor_postfinance_plugin'],
     install_requires=["postfinancecheckout==3.1.1"],
     license='MIT',

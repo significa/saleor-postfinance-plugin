@@ -10,6 +10,7 @@ PostFinance gateway plugin for Saleor. This is a partially implementation, it on
 ### Steps to use the plugin
 
 1. Create a checkout using the channel where the plugin is active.
+
 ```graphql
 mutation checkoutCreate {
     checkoutCreate(
@@ -71,6 +72,7 @@ mutation checkoutComplete {
 ```
 
 5. Finally call `checkoutComplete` to confirm the payment was captured successfully.
+
 ```graphql
 mutation checkoutComplete {
   checkoutComplete(
