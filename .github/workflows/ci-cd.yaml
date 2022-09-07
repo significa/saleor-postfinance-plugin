@@ -13,14 +13,17 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Run flake8
-        uses: julianwachholz/flake8-action@v2
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-      - name: Run pycodesty (Linter)
-        uses: andymckay/pycodestyle-action@0.1.3
-
-      - name: Run mypy
-        uses: jpetrucciani/mypy-check@master
+      - name: Lint
+        run: |
+          set -ex
+          pip install -r requirements.dev.txt
+          pycodestyle .
+          flake8 .
+          mypy .
 
   publish:
     name: Publish
@@ -40,10 +43,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - uses: actions/setup-python@v4
         with:
-          python-version: "3.9"
+          python-version: '3.9'
 
       - name: Install dependencies
         run: |
