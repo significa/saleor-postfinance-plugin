@@ -1,6 +1,6 @@
 # Saleor PostFinance plugin
 
-PostFinance gateway plugin for Saleor.
+PostFinance gateway plugin for Saleor. This is a partially implementation, it only supports PostFinance [payment page integration](https://checkout.postfinance.ch/doc/payment/payment-page) and it does not support refunds and void payments.
 
 ### Setup PostFinance Plugin
 
@@ -9,7 +9,7 @@ PostFinance gateway plugin for Saleor.
 
 ### Steps to use the plugin
 
-1 - Create a checkout using the channel where the plugin is active.
+1. Create a checkout using the channel where the plugin is active.
 ```graphql
 mutation checkoutCreate {
     checkoutCreate(
@@ -34,7 +34,7 @@ mutation checkoutCreate {
 ```graphql
 mutation checkoutPaymentCreate {
     checkoutPaymentCreate(
-        id: "checkout-example-id",
+        id: "Q2hlY2tvdXQ6NTE3M2ViNzAtNjMxOC00YzA3LTgwYzktY2VlNjkyMTdjZGE2",
         input: {
             gateway: "significa.payments.postfinance",
         }
@@ -52,7 +52,7 @@ mutation checkoutPaymentCreate {
 mutation checkoutComplete {
   checkoutComplete(
     id: "Q2hlY2tvdXQ6NTE3M2ViNzAtNjMxOC00YzA3LTgwYzktY2VlNjkyMTdjZGE2",
-    paymentData:"{\"successUrl\": \"https://example.com/success?checkout_id=checkout-example-id\", \"failUrl\": \"https://example.com/fail?checkout_id=checkout-example-id\"}"
+    paymentData:"{\"successUrl\": \"https://example.com/success?checkout_id=Q2hlY2tvdXQ6NTE3M2ViNzAtNjMxOC00YzA3LTgwYzktY2VlNjkyMTdjZGE2\", \"failUrl\": \"https://example.com/fail?checkout_id=Q2hlY2tvdXQ6NTE3M2ViNzAtNjMxOC00YzA3LTgwYzktY2VlNjkyMTdjZGE2\"}"
   ) {
     confirmationNeeded
     confirmationData
@@ -74,7 +74,7 @@ mutation checkoutComplete {
 ```graphql
 mutation checkoutComplete {
   checkoutComplete(
-    id: "checkout-example-id",
+    id: "Q2hlY2tvdXQ6NTE3M2ViNzAtNjMxOC00YzA3LTgwYzktY2VlNjkyMTdjZGE2",
   ) {
     confirmationNeeded
     confirmationData

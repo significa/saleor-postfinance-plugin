@@ -1,3 +1,5 @@
+from typing import Optional
+
 from postfinancecheckout import (Configuration, LineItem, LineItemType,
                                  Transaction, TransactionPaymentPageServiceApi,
                                  TransactionServiceApi, TransactionState)
@@ -9,7 +11,10 @@ POSTFINANCE_E_FINANCE_ID = 1461146715166
 POSTFINANCE_CARD_ID = 1461144402291
 
 
-def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayResponse:
+def capture(
+    payment_information: PaymentData,
+    config: GatewayConfig
+) -> GatewayResponse:
     success_url = payment_information.data["successUrl"]
     fail_url = payment_information.data["failUrl"]
 
@@ -34,17 +39,22 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
 
     space_id = _get_space_id(config=config)
     postfinance_transaction_service = _get_transaction_service(config=config)
-    postfinance_transaction_payment_page_service = _get_transaction_payment_page_service(
-        config=config)
+    postfinance_transaction_payment_page_service = (
+        _get_transaction_payment_page_service(
+            config=config
+        )
+    )
 
     postfinance_transaction = postfinance_transaction_service.create(
         space_id=space_id,
         transaction=transaction,
     )
 
-    payment_page_url = postfinance_transaction_payment_page_service.payment_page_url(
-        space_id=space_id,
-        id=postfinance_transaction.id,
+    payment_page_url = (
+        postfinance_transaction_payment_page_service.payment_page_url(
+            space_id=space_id,
+            id=postfinance_transaction.id,
+        )
     )
 
     return GatewayResponse(
@@ -61,7 +71,11 @@ def capture(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
     )
 
 
-def confirm(payment_information: PaymentData, config: GatewayConfig) -> GatewayResponse:
+def confirm(
+    payment_information: PaymentData,
+    config: GatewayConfig
+) -> GatewayResponse:
+    error: Optional[str]
     error = "Unable to process capture"
     success = False
 
@@ -74,7 +88,10 @@ def confirm(payment_information: PaymentData, config: GatewayConfig) -> GatewayR
         id=postfinance_transaction_id
     )
 
-    if postfinance_transaction.state in (TransactionState.FULFILL, TransactionState.AUTHORIZED):
+    if postfinance_transaction.state in (
+        TransactionState.FULFILL,
+        TransactionState.AUTHORIZED
+    ):
         success = True
         error = None
 
@@ -96,18 +113,22 @@ def process_payment(
 
 
 def _get_transaction_service(config: GatewayConfig):
-    return TransactionServiceApi(configuration=_get_configuration(**config.connection_params))
+    return TransactionServiceApi(
+        configuration=_get_configuration(**config.connection_params)
+    )
 
 
 def _get_transaction_payment_page_service(config: GatewayConfig):
-    return TransactionPaymentPageServiceApi(configuration=_get_configuration(**config.connection_params))
+    return TransactionPaymentPageServiceApi(
+        configuration=_get_configuration(**config.connection_params)
+    )
 
 
 def _get_space_id(config: GatewayConfig):
     return config.connection_params.get("space_id")
 
 
-def _get_configuration(user_id: str, user_secret: str, **_):
+def _get_configuration(user_id: str, user_secret: str, **_kwargs):
     return Configuration(
         user_id=user_id,
         api_secret=user_secret
