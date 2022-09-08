@@ -77,22 +77,22 @@ class PostFinanceGatewayPlugin(BasePlugin):
         return self.config
 
     @require_active_plugin
-    def token_is_required_as_payment_input(self, _previous_value):
+    def token_is_required_as_payment_input(self, previous_value):
         return False
 
     @require_active_plugin
     def confirm_payment(
-        self, payment_information: "PaymentData", _previous_value
+        self, payment_information: "PaymentData", previous_value
     ) -> "GatewayResponse":
         return confirm(payment_information, self._get_gateway_config())
-
+        
     @require_active_plugin
     def process_payment(
-        self, payment_information: "PaymentData", _previous_value
+        self, payment_information: "PaymentData", previous_value
     ) -> "GatewayResponse":
         return process_payment(payment_information, self._get_gateway_config())
 
     @require_active_plugin
-    def get_supported_currencies(self, _previous_value):
+    def get_supported_currencies(self, previous_value):
         config = self._get_gateway_config()
         return get_supported_currencies(config, GATEWAY_NAME)
