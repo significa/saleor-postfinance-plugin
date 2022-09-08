@@ -6,7 +6,7 @@ long_description = (Path(__file__).parent / "README.md").read_text()
 
 setup(
     name="saleor-postfinance-plugin",
-    version="0.0.1",
+    version="0.0.2",
     description="Saleor PostFinance gateway plugin.",
     long_description=long_description,
     long_description_content_type='text/markdown',
