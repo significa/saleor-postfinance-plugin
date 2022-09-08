@@ -85,7 +85,7 @@ class PostFinanceGatewayPlugin(BasePlugin):
         self, payment_information: "PaymentData", previous_value
     ) -> "GatewayResponse":
         return confirm(payment_information, self._get_gateway_config())
-        
+
     @require_active_plugin
     def process_payment(
         self, payment_information: "PaymentData", previous_value
