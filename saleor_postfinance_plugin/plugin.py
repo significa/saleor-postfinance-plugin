@@ -1,7 +1,6 @@
 from typing import TYPE_CHECKING
 
-from saleor.payment.gateways.utils import (get_supported_currencies,
-                                           require_active_plugin)
+from saleor.payment.gateways.utils import get_supported_currencies, require_active_plugin
 from saleor.plugins.base_plugin import BasePlugin, ConfigurationTypeField
 
 from . import GatewayConfig, confirm, process_payment
