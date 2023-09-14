@@ -1,11 +1,11 @@
 from typing import Optional
 
-from postfinancecheckout import (Configuration, LineItem, LineItemType,
-                                 Transaction, TransactionPaymentPageServiceApi,
-                                 TransactionServiceApi, TransactionState)
+from postfinancecheckout import (
+    Configuration, LineItem, LineItemType, Transaction, TransactionPaymentPageServiceApi,
+    TransactionServiceApi, TransactionState,
+)
 from saleor.payment import TransactionKind
-from saleor.payment.interface import (GatewayConfig, GatewayResponse,
-                                      PaymentData)
+from saleor.payment.interface import GatewayConfig, GatewayResponse, PaymentData
 
 POSTFINANCE_E_FINANCE_ID = 1461146715166
 POSTFINANCE_CARD_ID = 1461144402291

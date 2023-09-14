@@ -1,11 +1,15 @@
 # Saleor PostFinance plugin
 
-PostFinance gateway plugin for Saleor. This is a partially implementation, it only supports PostFinance [payment page integration](https://checkout.postfinance.ch/doc/payment/payment-page) and it does not support refunds and void payments.
+PostFinance gateway plugin for Saleor. This is a partially implementation, it only supports
+PostFinance [payment page integration](https://checkout.postfinance.ch/doc/payment/payment-page)
+and it does not support refunds and void payments.
 
 ### Setup PostFinance Plugin
 
 1. Navigate to Saleor Dashboard configuration and go to Plugins (Miscellaneous)
-2. Select the channel where you want to activate the plugin, fill in the  settings and set the plugin as active. (Keep in mind some payment methods used in PostFinance (ex: Twint) will only support with CHF currency.)
+2. Select the channel where you want to activate the plugin, fill in the  settings and set the
+plugin as active. (Keep in mind some payment methods used in PostFinance (ex: Twint) will only
+support CHF currency.)
 
 ### Steps to use the plugin
 
