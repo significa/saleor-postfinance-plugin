@@ -1,12 +1,20 @@
+import os
+import re
 from pathlib import Path
 
 from setuptools import setup
 
 long_description = (Path(__file__).parent / "README.md").read_text()
 
+version = re.sub(
+    r'^v',
+    '',
+    os.getenv('VERSION', 'v0.0.1')
+)
+
 setup(
     name="saleor-postfinance-plugin",
-    version="0.0.2",
+    version=version,
     description="Saleor PostFinance gateway plugin.",
     long_description=long_description,
     long_description_content_type='text/markdown',
